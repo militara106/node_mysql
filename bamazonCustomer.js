@@ -43,10 +43,6 @@ function customerChoice() {
             case "Buy":
                 printAndStart();
                 break;
-            case "Sell":
-                console.log("Not available.");
-                customerChoice();
-                break;
             case "Exit":
                 console.log("Thank you, come again!");
                 connection.end();
@@ -66,7 +62,7 @@ function printAndStart() {
                 " || Product: " + res[i].product_name +
                 " || Department: " + res[i].department_name +
                 " || Price: " + res[i].price +
-                " || # Available: " + res[i].stock_quantity + "\n"
+                " || # Available: " + res[i].stock_quantity
             );
             item_index.push(res[i].item_id);
         }
