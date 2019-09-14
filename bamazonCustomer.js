@@ -92,9 +92,9 @@ function purchase(id, amount) {
         remainder = (parseInt(res[0].stock_quantity) - parseInt(amount));
         if (remainder >= 0) {
             updateAmount(id, remainder);
-            console.log(amount + "x " + res[id - 1].product_name + " ordered. " + remainder + " left.")
+            console.log(amount + "x " + res[0].product_name + " ordered. " + remainder + " left.")
         } else {
-            console.log("Not enough " + res[id - 1].product_name + "s in stock to complete order");
+            console.log("Not enough " + res[0].product_name + "s in stock to complete order");
             updateAmount(id,res[0].stock_quantity);
         }
     })
