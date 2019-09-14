@@ -13,6 +13,7 @@ var connection = mysql.createConnection({
 // MAIN LOGIC
 connection.connect(function (err) {
     if (err) throw err;
+    createIndex();
     customerChoice();
 })
 
@@ -21,7 +22,10 @@ function customerOrder() {
     inquirer.prompt([{
         type: "input",
         name: "id",
-        message: "Type the product ID you wish to purchase."
+        message: "Type the product ID you wish to purchase.",
+        validate: function validateID(name){
+            return (name < item_index.length && name !== '');
+        }
     }, {
         type: "input",
         name: "amount",
@@ -37,7 +41,7 @@ function customerChoice() {
         type: "list",
         name: "choice",
         message: "What would you like to do?",
-        choices: ["Buy", "Sell", "Exit"]
+        choices: ["Buy", "Exit"]
     }]).then(function (res) {
         switch (res.choice) {
             case "Buy":
@@ -51,11 +55,21 @@ function customerChoice() {
     })
 }
 
-// Prints all products
-function printAndStart() {
-    item_index = [];
+// Creates Item Index
+function createIndex() {
     connection.query('SELECT * from products', function (err, res) {
         if (err) throw err;
+        for (var i = 0; i < res.length; i++) {
+            item_index.push(res[i].item_id);
+        }
+    });
+}
+
+// Prints all products
+function printAndStart() {
+    connection.query('SELECT * from products', function (err, res) {
+        if (err) throw err;
+        console.log('\n');
         for (var i = 0; i < res.length; i++) {
             console.log(
                 "Item ID: " + res[i].item_id +
@@ -64,8 +78,8 @@ function printAndStart() {
                 " || Price: " + res[i].price +
                 " || # Available: " + res[i].stock_quantity
             );
-            item_index.push(res[i].item_id);
         }
+        console.log('\n');
         customerOrder();
     });
 }
